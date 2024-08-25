@@ -6,12 +6,14 @@ import com.kauan.gestao_de_biblioteca.model.Usuario;
 import com.kauan.gestao_de_biblioteca.services.UsuarioServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+@Controller
 public class UsuarioController {
     @Autowired
     private UsuarioServices usuarioServices;
@@ -30,7 +32,7 @@ public class UsuarioController {
 
     @PostMapping("/post")
     public ResponseEntity cadastrarUsuario(@RequestBody UsuarioDTO usuario){
-        ResponseEntity usuarioResposta = this.usuarioServices.cadastrarUsuario(usuario);
+        ResponseEntity usuarioResposta = usuarioServices.cadastrarUsuario(usuario);
 
         return ResponseEntity.ok().body(usuarioResposta);
     }

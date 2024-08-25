@@ -4,6 +4,7 @@ import com.kauan.gestao_de_biblioteca.apiDTO.AtualizaUsuarioDTO;
 import com.kauan.gestao_de_biblioteca.apiDTO.UsuarioDTO;
 import com.kauan.gestao_de_biblioteca.model.Usuario;
 import com.kauan.gestao_de_biblioteca.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UsuarioServices {
 
     public Usuario buscarUsuario(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
-        return usuario.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return usuario.orElseThrow(() -> new RuntimeException("Usuário não encontrado com o id: " + id));
     }
 
     public ResponseEntity<Usuario> cadastrarUsuario(UsuarioDTO usuario) {
@@ -62,6 +63,8 @@ public class UsuarioServices {
                 }
 
                 usuarioRepository.save(usuario.get());
+            }else{
+                throw new EntityNotFoundException("Usuário com id: " + id + " não encontrado para realizar alteração");
             }
     }
 
@@ -70,6 +73,8 @@ public class UsuarioServices {
 
         if(usuario.isPresent()){
             usuarioRepository.deleteById(id);
+        }else{
+            throw new EntityNotFoundException("Usuário com id: " + id + " não encontrado para realizar remoção");
         }
     }
 }
