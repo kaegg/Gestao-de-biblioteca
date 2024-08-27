@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServices {
@@ -99,23 +100,29 @@ public class UsuarioServices {
     }
 
     public List<Livro> recomendarLivros(Long id){
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        Map<String, Integer> contador = new HashMap<>();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-        System.out.println(id);
+        if(usuarioOpt.isPresent()){
+            Usuario usuario = usuarioOpt.get();
 
-        if(usuario.isPresent()){
-            List<Emprestimo> emprestimos = emprestimoRepository.findByUsuario(usuario.get());
+            for (Emprestimo emprestimo : usuario.getEmprestimos()) {
+                String categoria = emprestimo.getLivro().getCategoria();
+                contador.put(categoria, contador.getOrDefault(categoria, 0) + 1);
+            }
 
-            List<Emprestimo> emprestimosOrdenados = emprestimos.stream().sorted((d1, d2) -> d2.getData_emprestimo().compareTo(d1.getData_emprestimo())).toList();
+            String categoriaMaisEmprestada = "";
+            int maxContagem = 0;
 
-            List<Emprestimo> ultimos3Emprestimos = emprestimosOrdenados.stream().limit(3).toList();
+            for (Map.Entry<String, Integer> entry : contador.entrySet()) {
+                if (entry.getValue() > maxContagem) {
+                    categoriaMaisEmprestada = entry.getKey();
+                    maxContagem = entry.getValue();
+                }
+            }
 
-            List<String> categorias = ultimos3Emprestimos.stream().map(emprestimo -> emprestimo.getLivro().getCategoria()).distinct().toList();
+            List<Livro> livrosRecomendados = livroRepository.findLivrosByCategoriaSemEmprestados(categoriaMaisEmprestada, id);
 
-            List<Long> idsLivrosEmprestados = emprestimos.stream().map(emprestimo -> emprestimo.getId()).toList();
-
-            List<Livro> livrosRecomendados = livroRepository.findByCategoriaSemId(categorias, idsLivrosEmprestados);
-            System.out.println(livrosRecomendados);
             return livrosRecomendados;
         }
 

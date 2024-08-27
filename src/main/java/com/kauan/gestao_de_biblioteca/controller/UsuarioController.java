@@ -53,8 +53,8 @@ public class UsuarioController {
 
     }
 
-    @GetMapping("/livrosRecomendados/{id}")
-    public List<Livro> recomendarLivros(@PathVariable("id") Long id){
+    @GetMapping("/livrosRecomendados/{idUsuario}")
+    public List<Livro> recomendarLivros(@PathVariable("idUsuario") Long id){
         List<Livro> livros = usuarioServices.recomendarLivros(id);
         return livros;
     }
