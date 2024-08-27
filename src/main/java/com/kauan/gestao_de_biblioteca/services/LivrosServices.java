@@ -3,6 +3,7 @@ package com.kauan.gestao_de_biblioteca.services;
 import com.kauan.gestao_de_biblioteca.apiDTO.AtualizaLivroDTO;
 import com.kauan.gestao_de_biblioteca.model.Livro;
 import com.kauan.gestao_de_biblioteca.repository.LivroRepository;
+import com.kauan.gestao_de_biblioteca.util.EmprestimoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class LivrosServices {
         return livro.orElseThrow(() -> new EntityNotFoundException("Livro não encontrado com o id: " + id));
     }
 
-    public ResponseEntity<Livro> cadastrarLivro(Livro livro) {
+    public ResponseEntity<Object> cadastrarLivro(Livro livro) {
         Livro novoLivro = new Livro();
 
         if(livroRepository.findByIsbn(livro.getIsbn()).isEmpty()){
@@ -38,12 +39,12 @@ public class LivrosServices {
             livroRepository.save(novoLivro);
 
             return ResponseEntity.ok(novoLivro);
+        }else{
+            return ResponseEntity.badRequest().body("ISBN já cadastrado");
         }
-
-        return ResponseEntity.badRequest().build();
     }
 
-    public void alterarLivro(Long id, AtualizaLivroDTO atualizaLivroDTO){
+    public ResponseEntity<Object> alterarLivro(Long id, AtualizaLivroDTO atualizaLivroDTO){
         Optional<Livro> livro = livroRepository.findById(id);
 
         if(livro.isPresent()){
@@ -63,19 +64,26 @@ public class LivrosServices {
                 livro.get().setCategoria(atualizaLivroDTO.categoria());
             }
 
-            livroRepository.save(livro.get());
+            return ResponseEntity.ok(livro.get());
         }else{
-            throw new EntityNotFoundException("Livro com id: " + id + " não encontrado para realizar alteração");
+            return ResponseEntity.badRequest().body("Livro com id: " + id + " não encontrado para realizar alteração");
         }
     }
 
-    public void deletarLivro(Long id){
+    public ResponseEntity<Object> deletarLivro(Long id){
+        EmprestimoUtil emprestimoUtil = new EmprestimoUtil();
         Optional<Livro> livro = livroRepository.findById(id);
+
+        if(emprestimoUtil.emprestimoAtivoLivro(livro.get())){
+            return ResponseEntity.badRequest().body("Não é possível realizar a remoção deste livro, pois há um empréstimo ativo para ele");
+        }
 
         if(livro.isPresent()){
             livroRepository.deleteById(id);
+
+            return ResponseEntity.ok().body("Livro com Id: " + id + " deletado com sucesso!");
         }else{
-            throw new EntityNotFoundException("Livro com id: " + id + " não encontrado para realizar remoção");
+            return ResponseEntity.badRequest().body("Livro com id: " + id + " não encontrado para realizar remoção");
         }
     }
 }

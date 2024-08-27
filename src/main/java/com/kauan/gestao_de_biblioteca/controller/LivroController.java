@@ -36,16 +36,16 @@ public class LivroController {
     }
 
     @PutMapping("/put/{id}")
-    public ResponseEntity<Void> alterarLivro(@PathVariable("id") Long id, @RequestBody AtualizaLivroDTO atualizaLivroDTO){
-        livrosServices.alterarLivro(id, atualizaLivroDTO);
+    public ResponseEntity alterarLivro(@PathVariable("id") Long id, @RequestBody AtualizaLivroDTO atualizaLivroDTO){
+        ResponseEntity livroResposta = livrosServices.alterarLivro(id, atualizaLivroDTO);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(livroResposta);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deletarLivro(@PathVariable("id") Long id){
-        livrosServices.deletarLivro(id);
+    public ResponseEntity deletarLivro(@PathVariable("id") Long id){
+        ResponseEntity livroResposta = livrosServices.deletarLivro(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(livroResposta);
     }
 }

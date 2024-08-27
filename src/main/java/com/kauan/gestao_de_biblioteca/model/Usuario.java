@@ -1,5 +1,6 @@
 package com.kauan.gestao_de_biblioteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,12 +20,17 @@ import java.util.List;
 public class Usuario{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String nome;
     private String email;
     private LocalDateTime data_cadastro;
     private String telefone;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Emprestimo> emprestimos = new ArrayList<>();
+
+    @OneToMany
+    @JsonIgnore
+    private List<Livro> livros_recomendados = new ArrayList<>();
 }

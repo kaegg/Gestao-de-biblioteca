@@ -2,6 +2,7 @@ package com.kauan.gestao_de_biblioteca.controller;
 
 import com.kauan.gestao_de_biblioteca.apiDTO.AtualizaUsuarioDTO;
 import com.kauan.gestao_de_biblioteca.apiDTO.UsuarioDTO;
+import com.kauan.gestao_de_biblioteca.model.Livro;
 import com.kauan.gestao_de_biblioteca.model.Usuario;
 import com.kauan.gestao_de_biblioteca.services.UsuarioServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,23 @@ public class UsuarioController {
     }
 
     @PutMapping("/put/{id}")
-    public ResponseEntity<Void> alterarUsuario(@PathVariable("id") Long id, @RequestBody AtualizaUsuarioDTO atualizaUsuarioDTO){
-        usuarioServices.alterarUsuario(id, atualizaUsuarioDTO);
+    public ResponseEntity alterarUsuario(@PathVariable("id") Long id, @RequestBody AtualizaUsuarioDTO atualizaUsuarioDTO){
+        ResponseEntity usuarioResposta = usuarioServices.alterarUsuario(id, atualizaUsuarioDTO);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(usuarioResposta);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable("id") Long id){
-        usuarioServices.deletarUsuario(id);
+    public ResponseEntity deletarUsuario(@PathVariable("id") Long id){
+        ResponseEntity usuarioResposta = usuarioServices.deletarUsuario(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(usuarioResposta);
+
+    }
+
+    @GetMapping("/livrosRecomendados/{id}")
+    public List<Livro> recomendarLivros(@PathVariable("id") Long id){
+        List<Livro> livros = usuarioServices.recomendarLivros(id);
+        return livros;
     }
 }
