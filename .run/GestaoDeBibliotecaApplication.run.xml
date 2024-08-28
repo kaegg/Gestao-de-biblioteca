@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GestaoDeBibliotecaApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.kauan.gestao_de_biblioteca.GestaoDeBibliotecaApplication" />
+    <module name="gestao_de_biblioteca" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.kauan.gestao_de_biblioteca.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
