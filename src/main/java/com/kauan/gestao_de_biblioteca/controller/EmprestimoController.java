@@ -30,14 +30,14 @@ public class EmprestimoController {
         return ResponseEntity.ok().body(emprestimo);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity cadastrarEmprestimo(@RequestBody EmprestimoDTO emprestimo){
         ResponseEntity<Object> emprestimoResposta = emprestimoServices.cadastrarEmprestimo(emprestimo);
 
         return ResponseEntity.ok().body(emprestimoResposta);
     }
 
-    @PutMapping("/put/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity atualizarEmprestimo(@PathVariable("id") Long id, @RequestBody AtualizaEmprestimoDTO atualizaEmprestimoDTO){
         ResponseEntity<Object> emprestimoResposta = emprestimoServices.atualizarEmprestimo(id, atualizaEmprestimoDTO);
 

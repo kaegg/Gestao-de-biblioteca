@@ -31,21 +31,21 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuario);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity cadastrarUsuario(@RequestBody UsuarioDTO usuario){
         ResponseEntity usuarioResposta = usuarioServices.cadastrarUsuario(usuario);
 
         return ResponseEntity.ok().body(usuarioResposta);
     }
 
-    @PutMapping("/put/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity alterarUsuario(@PathVariable("id") Long id, @RequestBody AtualizaUsuarioDTO atualizaUsuarioDTO){
         ResponseEntity usuarioResposta = usuarioServices.alterarUsuario(id, atualizaUsuarioDTO);
 
         return ResponseEntity.ok().body(usuarioResposta);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deletarUsuario(@PathVariable("id") Long id){
         ResponseEntity usuarioResposta = usuarioServices.deletarUsuario(id);
 

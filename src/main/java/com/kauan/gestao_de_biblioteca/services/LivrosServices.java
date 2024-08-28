@@ -1,6 +1,7 @@
 package com.kauan.gestao_de_biblioteca.services;
 
 import com.kauan.gestao_de_biblioteca.apiDTO.AtualizaLivroDTO;
+import com.kauan.gestao_de_biblioteca.apiDTO.LivroDTO;
 import com.kauan.gestao_de_biblioteca.model.Livro;
 import com.kauan.gestao_de_biblioteca.repository.LivroRepository;
 import com.kauan.gestao_de_biblioteca.util.EmprestimoUtil;
@@ -26,15 +27,15 @@ public class LivrosServices {
         return livro.orElseThrow(() -> new EntityNotFoundException("Livro não encontrado com o id: " + id));
     }
 
-    public ResponseEntity<Object> cadastrarLivro(Livro livro) {
+    public ResponseEntity<Object> cadastrarLivro(LivroDTO livro) {
         Livro novoLivro = new Livro();
 
-        if(livroRepository.findByIsbn(livro.getIsbn()).isEmpty()){
-            novoLivro.setTitulo(livro.getTitulo());
-            novoLivro.setAutor(livro.getAutor());
-            novoLivro.setIsbn(livro.getIsbn());
-            novoLivro.setData_publicacao(livro.getData_publicacao());
-            novoLivro.setCategoria(livro.getCategoria());
+        if(livroRepository.findByIsbn(livro.isbn()).isEmpty()){
+            novoLivro.setTitulo(livro.titulo());
+            novoLivro.setAutor(livro.autor());
+            novoLivro.setIsbn(livro.isbn());
+            novoLivro.setData_publicacao(livro.data_publicacao());
+            novoLivro.setCategoria(livro.categoria());
 
             livroRepository.save(novoLivro);
 
@@ -63,6 +64,8 @@ public class LivrosServices {
             if(atualizaLivroDTO.categoria() != null){
                 livro.get().setCategoria(atualizaLivroDTO.categoria());
             }
+
+            livroRepository.save(livro.get());
 
             return ResponseEntity.ok(livro.get());
         }else{

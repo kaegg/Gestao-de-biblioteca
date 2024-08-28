@@ -1,6 +1,7 @@
 package com.kauan.gestao_de_biblioteca.controller;
 
 import com.kauan.gestao_de_biblioteca.apiDTO.AtualizaLivroDTO;
+import com.kauan.gestao_de_biblioteca.apiDTO.LivroDTO;
 import com.kauan.gestao_de_biblioteca.model.Livro;
 import com.kauan.gestao_de_biblioteca.services.LivrosServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +29,21 @@ public class LivroController {
         return ResponseEntity.ok().body(livro);
     }
 
-    @PostMapping("/post")
-    public ResponseEntity cadastrarLivro(@RequestBody Livro livro){
+    @PostMapping
+    public ResponseEntity cadastrarLivro(@RequestBody LivroDTO livro){
         ResponseEntity livroResposta = livrosServices.cadastrarLivro(livro);
 
         return ResponseEntity.ok().body(livroResposta);
     }
 
-    @PutMapping("/put/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity alterarLivro(@PathVariable("id") Long id, @RequestBody AtualizaLivroDTO atualizaLivroDTO){
         ResponseEntity livroResposta = livrosServices.alterarLivro(id, atualizaLivroDTO);
 
         return ResponseEntity.ok().body(livroResposta);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deletarLivro(@PathVariable("id") Long id){
         ResponseEntity livroResposta = livrosServices.deletarLivro(id);
 
